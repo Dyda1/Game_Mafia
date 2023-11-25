@@ -1,6 +1,8 @@
-﻿ using UnityEngine;
+﻿using System;
+using UnityEngine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 #endif
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
@@ -17,6 +19,15 @@ namespace StarterAssets
         [Header("Camera")]
         [Tooltip("Camera rotation speed")]
         public float cameraSensitivity = 5.0f;
+
+        [Tooltip("Скорость отдаления/приближения камеры")]
+        public float cameraScrollSpeed = 0.5f;
+
+        [Tooltip("Максимальное отдаление камеры")]
+        public float maxCameraScroll = -10.0f;
+
+        [Tooltip("Максимальное приближение камеры")]
+        public float minCameraScroll = -3.0f;
 
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
@@ -218,7 +229,17 @@ namespace StarterAssets
 
         private void CameraPosition()
         {
-            CinemachineCameraTarget.transform.position = CinemachineCameraTarget.transform.position + new Vector3(0, 0, 2);
+            if (_input.CameraMoveUp && Math.Abs(_mainCamera.transform.localPosition.z) > Math.Abs(minCameraScroll))
+            {
+                _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
+                _input.CameraMoveUp = false;
+            }
+            if (_input.CameraMoveDown && Math.Abs(_mainCamera.transform.localPosition.z) < Math.Abs(maxCameraScroll))
+            {
+                _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
+                _input.CameraMoveDown = false;
+            }
+            //CinemachineCameraTarget.transform.position = CinemachineCameraTarget.transform.position + new Vector3(0, 0, 2);
         }
 
         private void Move()
