@@ -14,6 +14,10 @@ namespace StarterAssets
 #endif
     public class ThirdPersonController : MonoBehaviour
     {
+        [Header("Camera")]
+        [Tooltip("Camera rotation speed")]
+        public float cameraSensitivity = 5.0f;
+
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
@@ -164,6 +168,7 @@ namespace StarterAssets
         private void LateUpdate()
         {
             CameraRotation();
+            CameraPosition();
         }
 
         private void AssignAnimationIDs()
@@ -198,8 +203,8 @@ namespace StarterAssets
                 //Don't multiply mouse input by Time.deltaTime;
                 float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
-                _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
-                _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
+                _cinemachineTargetYaw += _input.look.x * cameraSensitivity * deltaTimeMultiplier;
+                _cinemachineTargetPitch += _input.look.y * cameraSensitivity * deltaTimeMultiplier;
             }
 
             // clamp our rotations so our values are limited 360 degrees
@@ -209,6 +214,11 @@ namespace StarterAssets
             // Cinemachine will follow this target
             CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
                 _cinemachineTargetYaw, 0.0f);
+        }
+
+        private void CameraPosition()
+        {
+            CinemachineCameraTarget.transform.position = CinemachineCameraTarget.transform.position + new Vector3(0, 0, 2);
         }
 
         private void Move()

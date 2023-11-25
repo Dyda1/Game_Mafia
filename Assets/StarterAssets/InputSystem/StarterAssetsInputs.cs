@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Animations;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -10,7 +11,9 @@ namespace StarterAssets
 		[Header("Character Input Values")]
 		public Vector2 move;
 		public Vector2 look;
-		public bool jump;
+		public bool CameraMoveUp;
+        public bool CameraMoveDown;
+        public bool jump;
 		public bool sprint;
 
 		[Header("Movement Settings")]
@@ -21,7 +24,20 @@ namespace StarterAssets
 		public bool cursorInputForLook = true;
 
 #if ENABLE_INPUT_SYSTEM
-		public void OnMove(InputValue value)
+
+		public void OnCameraMoveUp(InputValue value)
+		{
+			CameraMoveUpInput(value.isPressed);
+
+        }
+
+        public void OnCameraMoveDown(InputValue value)
+        {
+            CameraMoveDownInput(value.isPressed);
+
+        }
+
+        public void OnMove(InputValue value)
 		{
 			MoveInput(value.Get<Vector2>());
 		}
@@ -45,8 +61,19 @@ namespace StarterAssets
 		}
 #endif
 
+		public void CameraMoveUpInput(bool newUpState)
+		{
+			CameraMoveUp = newUpState;
 
-		public void MoveInput(Vector2 newMoveDirection)
+        }
+
+        public void CameraMoveDownInput(bool newDownState)
+        {
+            CameraMoveDown = newDownState;
+
+        }
+
+        public void MoveInput(Vector2 newMoveDirection)
 		{
 			move = newMoveDirection;
 		} 
