@@ -14,7 +14,8 @@ namespace StarterAssets
 		public bool CameraMoveUp;
         public bool CameraMoveDown;
         public bool jump;
-		public bool sprint;
+        public bool sitForCrouch;
+        public bool sprint;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -25,10 +26,14 @@ namespace StarterAssets
 
 #if ENABLE_INPUT_SYSTEM
 
+		public void OnSitForCrouch(InputValue value)
+		{
+			SitForCrouchInput(value.isPressed);
+		}
+
 		public void OnCameraMoveUp(InputValue value)
 		{
 			CameraMoveUpInput(value.isPressed);
-
         }
 
         public void OnCameraMoveDown(InputValue value)
@@ -60,8 +65,13 @@ namespace StarterAssets
 			SprintInput(value.isPressed);
 		}
 #endif
+		public void SitForCrouchInput(bool newSitState)
+		{
+			sitForCrouch = newSitState;
+		}
 
-		public void CameraMoveUpInput(bool newUpState)
+
+        public void CameraMoveUpInput(bool newUpState)
 		{
 			CameraMoveUp = newUpState;
 

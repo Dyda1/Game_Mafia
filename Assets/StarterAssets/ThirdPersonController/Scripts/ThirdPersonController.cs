@@ -112,6 +112,7 @@ namespace StarterAssets
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
+        private int _animCrouch;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -174,6 +175,7 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+            Crouch();
         }
 
         private void LateUpdate()
@@ -189,6 +191,7 @@ namespace StarterAssets
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+            _animCrouch = Animator.StringToHash("Crouch");
         }
 
         private void GroundedCheck()
@@ -307,6 +310,26 @@ namespace StarterAssets
             {
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+            }
+        }
+
+        private void Crouch()
+        {
+            if (Grounded)
+            {
+                if (_hasAnimator)
+                {
+                    
+                }
+                //Crouch
+                if (_input.sitForCrouch)
+                {
+                    if (_hasAnimator)
+                    {
+                        _animator.SetBool(_animCrouch, !_animator.GetBool(_animCrouch));
+                    }
+                    _input.sitForCrouch = false;
+                }
             }
         }
 
