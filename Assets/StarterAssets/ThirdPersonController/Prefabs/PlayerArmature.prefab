@@ -1121,6 +1121,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e54e5a728a9234ab24fcf1460ed8a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraSensitivity: 5
+  cameraScrollSpeed: 0.5
+  maxCameraScroll: -10
+  minCameraScroll: -3
   MoveSpeed: 2
   SprintSpeed: 5.335
   RotationSmoothTime: 0.12
@@ -1184,7 +1188,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   move: {x: 0, y: 0}
   look: {x: 0, y: 0}
+  CameraMoveUp: 0
+  CameraMoveDown: 0
   jump: 0
+  sitForCrouch: 0
   sprint: 0
   analogMovement: 0
   cursorLocked: 1

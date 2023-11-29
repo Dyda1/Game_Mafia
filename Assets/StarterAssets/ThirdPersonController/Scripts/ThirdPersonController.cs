@@ -33,6 +33,9 @@ namespace StarterAssets
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
 
+        [Tooltip("Move speed of the character in m/s")]
+        public float MoveCrouchSpeed = 1.8f;
+
         [Tooltip("Sprint speed of the character in m/s")]
         public float SprintSpeed = 5.335f;
 
@@ -93,6 +96,7 @@ namespace StarterAssets
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
+        public static float _mainCameraPosZ;
 
         // player
         private float _speed;
@@ -101,6 +105,7 @@ namespace StarterAssets
         private float _rotationVelocity;
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
+        private bool _isSiting = false; 
 
         // timeout deltatime
         private float _jumpTimeoutDelta;
@@ -112,7 +117,7 @@ namespace StarterAssets
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
-        private int _animCrouch;
+        private int _animIdCrouch;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -150,6 +155,7 @@ namespace StarterAssets
 
         private void Start()
         {
+            _mainCameraPosZ = _mainCamera.transform.localPosition.z;
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             
             _hasAnimator = TryGetComponent(out _animator);
@@ -191,7 +197,7 @@ namespace StarterAssets
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
-            _animCrouch = Animator.StringToHash("Crouch");
+            _animIdCrouch = Animator.StringToHash("Crouch");
         }
 
         private void GroundedCheck()
@@ -235,11 +241,13 @@ namespace StarterAssets
             if (_input.CameraMoveUp && Math.Abs(_mainCamera.transform.localPosition.z) > Math.Abs(minCameraScroll))
             {
                 _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
+                _mainCameraPosZ += cameraScrollSpeed;
                 _input.CameraMoveUp = false;
             }
             if (_input.CameraMoveDown && Math.Abs(_mainCamera.transform.localPosition.z) < Math.Abs(maxCameraScroll))
             {
                 _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
+                _mainCameraPosZ -= cameraScrollSpeed;
                 _input.CameraMoveDown = false;
             }
             //CinemachineCameraTarget.transform.position = CinemachineCameraTarget.transform.position + new Vector3(0, 0, 2);
@@ -248,7 +256,19 @@ namespace StarterAssets
         private void Move()
         {
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            float targetSpeed;
+            if (_isSiting)
+            {
+                targetSpeed = MoveCrouchSpeed;
+            } else if(_input.sprint)
+            {
+                targetSpeed = SprintSpeed;
+            }
+            else
+            {
+                targetSpeed = MoveSpeed;
+            }
+             
 
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -326,8 +346,9 @@ namespace StarterAssets
                 {
                     if (_hasAnimator)
                     {
-                        _animator.SetBool(_animCrouch, !_animator.GetBool(_animCrouch));
+                        _animator.SetBool(_animIdCrouch, !_animator.GetBool(_animIdCrouch));
                     }
+                    _isSiting = !_isSiting;
                     _input.sitForCrouch = false;
                 }
             }
@@ -335,7 +356,7 @@ namespace StarterAssets
 
         private void JumpAndGravity()
         {
-            if (Grounded)
+            if (Grounded && !_isSiting)
             {
                 // reset the fall timeout timer
                 _fallTimeoutDelta = FallTimeout;
