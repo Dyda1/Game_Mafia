@@ -123,6 +123,8 @@ namespace StarterAssets
         private int _animIDMotionSpeed;
         private int _animIdCrouch;
 
+        private float _targetSpeed;
+
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
 #endif
@@ -177,6 +179,7 @@ namespace StarterAssets
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
             _crouchTimeoutDelta = CrouchTimeout;
+            _targetSpeed = MoveSpeed;
         }
 
         private void Update()
@@ -260,25 +263,29 @@ namespace StarterAssets
         private void Move()
         {
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed;
-            if (_isSiting)
+            if (Grounded)
             {
-                targetSpeed = MoveCrouchSpeed;
-            } else if(_input.sprint)
-            {
-                targetSpeed = SprintSpeed;
+                if (_isSiting)
+                {
+                    _targetSpeed = MoveCrouchSpeed;
+                }
+                else if (_input.sprint)
+                {
+                    _targetSpeed = SprintSpeed;
+                }
+                else
+                {
+                    _targetSpeed = MoveSpeed;
+                }
             }
-            else
-            {
-                targetSpeed = MoveSpeed;
-            }
+            
              
 
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
             // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
             // if there is no input, set the target speed to 0
-            if (_input.move == Vector2.zero) targetSpeed = 0.0f;
+            if (_input.move == Vector2.zero) _targetSpeed = 0.0f;
 
             // a reference to the players current horizontal velocity
             float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
@@ -287,12 +294,12 @@ namespace StarterAssets
             float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
 
             // accelerate or decelerate to target speed
-            if (currentHorizontalSpeed < targetSpeed - speedOffset ||
-                currentHorizontalSpeed > targetSpeed + speedOffset)
+            if (currentHorizontalSpeed < _targetSpeed - speedOffset ||
+                currentHorizontalSpeed > _targetSpeed + speedOffset)
             {
                 // creates curved result rather than a linear one giving a more organic speed change
                 // note T in Lerp is clamped, so we don't need to clamp our speed
-                _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude,
+                _speed = Mathf.Lerp(currentHorizontalSpeed, _targetSpeed * inputMagnitude,
                     Time.deltaTime * SpeedChangeRate);
 
                 // round speed to 3 decimal places
@@ -300,10 +307,10 @@ namespace StarterAssets
             }
             else
             {
-                _speed = targetSpeed;
+                _speed = _targetSpeed;
             }
 
-            _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * SpeedChangeRate);
+            _animationBlend = Mathf.Lerp(_animationBlend, _targetSpeed, Time.deltaTime * SpeedChangeRate);
             if (_animationBlend < 0.01f) _animationBlend = 0f;
 
             // normalise input direction
