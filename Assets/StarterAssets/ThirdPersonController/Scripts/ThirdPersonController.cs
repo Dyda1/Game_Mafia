@@ -61,12 +61,15 @@ namespace StarterAssets
         [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
         public float JumpTimeout = 0.50f;
 
+        [Tooltip("Time required to pass before being able to crouch again. Set to 0f to instantly crouch again")]
+        public float CrouchTimeout = 0.4f;
+
         [Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
         public float FallTimeout = 0.15f;
 
         [Header("Player Grounded")]
         [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
-        public bool Grounded = true;
+        public static bool Grounded = true;
 
         [Tooltip("Useful for rough ground")]
         public float GroundedOffset = -0.14f;
@@ -110,6 +113,7 @@ namespace StarterAssets
         // timeout deltatime
         private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
+        private float _crouchTimeoutDelta;
 
         // animation IDs
         private int _animIDSpeed;
@@ -172,6 +176,7 @@ namespace StarterAssets
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+            _crouchTimeoutDelta = CrouchTimeout;
         }
 
         private void Update()
@@ -250,7 +255,6 @@ namespace StarterAssets
                 _mainCameraPosZ -= cameraScrollSpeed;
                 _input.CameraMoveDown = false;
             }
-            //CinemachineCameraTarget.transform.position = CinemachineCameraTarget.transform.position + new Vector3(0, 0, 2);
         }
 
         private void Move()
@@ -342,15 +346,29 @@ namespace StarterAssets
                     
                 }
                 //Crouch
-                if (_input.sitForCrouch)
+                if (_input.sitForCrouch && _crouchTimeoutDelta <= 0.0f)
                 {
                     if (_hasAnimator)
                     {
                         _animator.SetBool(_animIdCrouch, !_animator.GetBool(_animIdCrouch));
                     }
+                    _crouchTimeoutDelta = CrouchTimeout;
                     _isSiting = !_isSiting;
                     _input.sitForCrouch = false;
                 }
+                else
+                {
+                    if (_input.sitForCrouch)
+                    {
+                        _input.sitForCrouch = false;
+                    }
+                    
+                    if (_crouchTimeoutDelta >= 0.0f)
+                    {
+                        _crouchTimeoutDelta -= Time.deltaTime;
+                    }
+                }
+
             }
         }
 

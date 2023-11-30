@@ -28,8 +28,11 @@ namespace StarterAssets
 
 		public void OnSitForCrouch(InputValue value)
 		{
-			SitForCrouchInput(value.isPressed);
-		}
+			if (ThirdPersonController.Grounded)
+			{
+                SitForCrouchInput(value.isPressed);
+            }
+        }
 
 		public void OnCameraMoveUp(InputValue value)
 		{
