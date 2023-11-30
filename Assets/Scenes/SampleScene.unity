@@ -2959,7 +2959,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 211790646}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9809d988d439b3746933bd93e1bf2cae, type: 3}
   m_Name: 
@@ -14573,6 +14573,10 @@ PrefabInstance:
       value: PlayerArmature
       objectReference: {fileID: 0}
     - target: {fileID: 4416926081852918490, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
+      propertyPath: CrouchTimeout
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4416926081852918490, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
       propertyPath: LockCameraPosition
       value: 0
       objectReference: {fileID: 0}
@@ -14583,6 +14587,10 @@ PrefabInstance:
     - target: {fileID: 4416926081852918491, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
       propertyPath: m_Center.y
       value: 0.93
+      objectReference: {fileID: 0}
+    - target: {fileID: 5885216827943657505, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
+      propertyPath: canPush
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
