@@ -9,6 +9,8 @@ public class CameraScript : MonoBehaviour
     public GameObject mainCamera;
     public Transform normalPosition;
     public Transform frontPosition;
+    float tempDistance;
+    Vector3 newPosition;
     RaycastHit hit;
     // Start is called before the first frame update
     void Start()
@@ -21,8 +23,12 @@ public class CameraScript : MonoBehaviour
     {
         if (Physics.Linecast(normalPosition.position, frontPosition.position, out hit))
         {
-            float tempDistance = Vector3.Distance(normalPosition.position, hit.point);
-            mainCamera.transform.localPosition = mainCamera.transform.localPosition + new Vector3(0, 0, +tempDistance);
+            tempDistance = Vector3.Distance(mainCamera.transform.position, frontPosition.position) - Vector3.Distance(frontPosition.position, hit.point);
+            newPosition = mainCamera.transform.localPosition + new Vector3(0, 0, +tempDistance);
+            if (Math.Abs(newPosition.z) < Math.Abs(ThirdPersonController.maxCameraScroll) && Math.Abs(newPosition.z) > 0)
+            {
+                mainCamera.transform.localPosition = newPosition;
+            }
         }
         else
         {
