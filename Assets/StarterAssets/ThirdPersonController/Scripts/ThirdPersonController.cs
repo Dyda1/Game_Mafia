@@ -24,10 +24,10 @@ namespace StarterAssets
         public float cameraScrollSpeed = 0.5f;
 
         [Tooltip("Максимальное отдаление камеры")]
-        public float maxCameraScroll = -10.0f;
+        public static float maxCameraScroll = -10.0f;
 
         [Tooltip("Максимальное приближение камеры")]
-        public float minCameraScroll = -3.0f;
+        public static float minCameraScroll = -3.0f;
 
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
@@ -132,6 +132,7 @@ namespace StarterAssets
         private CharacterController _controller;
         private StarterAssetsInputs _input;
         private GameObject _mainCamera;
+        private GameObject _normalCamera;
 
         private const float _threshold = 0.01f;
 
@@ -156,6 +157,8 @@ namespace StarterAssets
             if (_mainCamera == null)
             {
                 _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+
+                _normalCamera = GameObject.FindGameObjectWithTag("NormalCamera");
             }
         }
 
@@ -249,12 +252,14 @@ namespace StarterAssets
             if (_input.CameraMoveUp && Math.Abs(_mainCamera.transform.localPosition.z) > Math.Abs(minCameraScroll))
             {
                 _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
+                _normalCamera.transform.localPosition = _normalCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
                 _mainCameraPosZ += cameraScrollSpeed;
                 _input.CameraMoveUp = false;
             }
             if (_input.CameraMoveDown && Math.Abs(_mainCamera.transform.localPosition.z) < Math.Abs(maxCameraScroll))
             {
                 _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
+                _normalCamera.transform.localPosition = _normalCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
                 _mainCameraPosZ -= cameraScrollSpeed;
                 _input.CameraMoveDown = false;
             }
@@ -350,7 +355,8 @@ namespace StarterAssets
             {
                 if (_hasAnimator)
                 {
-                    
+                    _animator.SetBool(_animIDJump, false);
+                    _animator.SetBool(_animIDFreeFall, false);
                 }
                 //Crouch
                 if (_input.sitForCrouch && _crouchTimeoutDelta <= 0.0f)
