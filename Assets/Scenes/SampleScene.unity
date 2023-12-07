@@ -5325,7 +5325,8 @@ MonoBehaviour:
   mainCamera: {fileID: 211790646}
   normalPosition: {fileID: 1838963999}
   frontPosition: {fileID: 376266786}
-  cameraSpeed: 0.2
+  cameraSpeed: 12.24
+  deltaSpeed: 0.02
 --- !u!1001 &212996932
 PrefabInstance:
   m_ObjectHideFlags: 0
