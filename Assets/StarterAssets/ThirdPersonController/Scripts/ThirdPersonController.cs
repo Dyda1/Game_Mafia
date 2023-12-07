@@ -67,6 +67,9 @@ namespace StarterAssets
         [Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
         public float FallTimeout = 0.15f;
 
+        [Tooltip("Time required to pass before entering the camera scroll")]
+        public float CameraScrollTimeout = 0.02f;
+
         [Header("Player Grounded")]
         [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
         public static bool Grounded = true;
@@ -114,6 +117,7 @@ namespace StarterAssets
         private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
         private float _crouchTimeoutDelta;
+        private float _cameraScrollTimeoutDelta;
 
         // animation IDs
         private int _animIDSpeed;
@@ -182,6 +186,7 @@ namespace StarterAssets
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
             _crouchTimeoutDelta = CrouchTimeout;
+            _cameraScrollTimeoutDelta = CameraScrollTimeout;
             _targetSpeed = MoveSpeed;
         }
 
@@ -189,6 +194,7 @@ namespace StarterAssets
         {
             _hasAnimator = TryGetComponent(out _animator);
 
+            
             JumpAndGravity();
             GroundedCheck();
             Move();
@@ -249,19 +255,30 @@ namespace StarterAssets
 
         private void CameraPosition()
         {
-            if (_input.CameraMoveUp && Math.Abs(_mainCamera.transform.localPosition.z) > Math.Abs(minCameraScroll))
-            {
-                _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
-                _normalCamera.transform.localPosition = _normalCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
-                _mainCameraPosZ += cameraScrollSpeed;
-                _input.CameraMoveUp = false;
+            if(_cameraScrollTimeoutDelta <= 0.0f) { 
+                if (_input.CameraMoveUp && Math.Abs(_mainCamera.transform.localPosition.z) > Math.Abs(minCameraScroll))
+                {
+                    _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
+                    _normalCamera.transform.localPosition = _normalCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
+                    _mainCameraPosZ += cameraScrollSpeed;
+                    _cameraScrollTimeoutDelta = CameraScrollTimeout;
+                    //_input.CameraMoveUp = false;
+                }
+                if (_input.CameraMoveDown && Math.Abs(_mainCamera.transform.localPosition.z) < Math.Abs(maxCameraScroll))
+                {
+                    _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
+                    _normalCamera.transform.localPosition = _normalCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
+                    _mainCameraPosZ -= cameraScrollSpeed;
+                    _cameraScrollTimeoutDelta = CameraScrollTimeout;
+                    //_input.CameraMoveDown = false;
+                }
             }
-            if (_input.CameraMoveDown && Math.Abs(_mainCamera.transform.localPosition.z) < Math.Abs(maxCameraScroll))
+            else
             {
-                _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
-                _normalCamera.transform.localPosition = _normalCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
-                _mainCameraPosZ -= cameraScrollSpeed;
-                _input.CameraMoveDown = false;
+                if (_cameraScrollTimeoutDelta >= 0.0f)
+                {
+                    _cameraScrollTimeoutDelta -= Time.deltaTime;
+                }
             }
         }
 
@@ -387,42 +404,46 @@ namespace StarterAssets
 
         private void JumpAndGravity()
         {
-            if (Grounded && !_isSiting)
+            if (Grounded)
             {
-                // reset the fall timeout timer
-                _fallTimeoutDelta = FallTimeout;
-
-                // update animator if using character
-                if (_hasAnimator)
+                if (!_isSiting)
                 {
-                    _animator.SetBool(_animIDJump, false);
-                    _animator.SetBool(_animIDFreeFall, false);
-                }
-
-                // stop our velocity dropping infinitely when grounded
-                if (_verticalVelocity < 0.0f)
-                {
-                    _verticalVelocity = -2f;
-                }
-
-                // Jump
-                if (_input.jump && _jumpTimeoutDelta <= 0.0f)
-                {
-                    // the square root of H * -2 * G = how much velocity needed to reach desired height
-                    _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+                    // reset the fall timeout timer
+                    _fallTimeoutDelta = FallTimeout;
 
                     // update animator if using character
                     if (_hasAnimator)
                     {
-                        _animator.SetBool(_animIDJump, true);
+                        _animator.SetBool(_animIDJump, false);
+                        _animator.SetBool(_animIDFreeFall, false);
                     }
-                }
 
-                // jump timeout
-                if (_jumpTimeoutDelta >= 0.0f)
-                {
-                    _jumpTimeoutDelta -= Time.deltaTime;
-                }
+                    // stop our velocity dropping infinitely when grounded
+                    if (_verticalVelocity < 0.0f)
+                    {
+                        _verticalVelocity = -2f;
+                    }
+
+                    // Jump
+                    if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+                    {
+                        // the square root of H * -2 * G = how much velocity needed to reach desired height
+                        _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+
+                        // update animator if using character
+                        if (_hasAnimator)
+                        {
+                            _animator.SetBool(_animIDJump, true);
+                        }
+                    }
+
+                    // jump timeout
+                    if (_jumpTimeoutDelta >= 0.0f)
+                    {
+                        _jumpTimeoutDelta -= Time.deltaTime;
+                    }
+
+                } 
             }
             else
             {
@@ -437,10 +458,11 @@ namespace StarterAssets
                 else
                 {
                     // update animator if using character
-                    if (_hasAnimator)
-                    {
-                        _animator.SetBool(_animIDFreeFall, true);
-                    }
+                   
+                }
+                if (_hasAnimator)
+                {
+                    _animator.SetBool(_animIDFreeFall, true);
                 }
 
                 // if we are not grounded, do not jump

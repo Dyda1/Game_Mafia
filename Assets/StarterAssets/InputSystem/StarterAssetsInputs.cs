@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Animations;
+using UnityEngine.EventSystems;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -7,7 +8,7 @@ using UnityEngine.InputSystem;
 namespace StarterAssets
 {
 	public class StarterAssetsInputs : MonoBehaviour
-	{
+    {
 		[Header("Character Input Values")]
 		public Vector2 move;
 		public Vector2 look;
@@ -37,12 +38,13 @@ namespace StarterAssets
 		public void OnCameraMoveUp(InputValue value)
 		{
 			CameraMoveUpInput(value.isPressed);
+            Debug.Log(value.isPressed);
         }
 
         public void OnCameraMoveDown(InputValue value)
         {
             CameraMoveDownInput(value.isPressed);
-
+			
         }
 
         public void OnMove(InputValue value)
@@ -77,13 +79,11 @@ namespace StarterAssets
         public void CameraMoveUpInput(bool newUpState)
 		{
 			CameraMoveUp = newUpState;
-
         }
 
         public void CameraMoveDownInput(bool newDownState)
         {
             CameraMoveDown = newDownState;
-
         }
 
         public void MoveInput(Vector2 newMoveDirection)

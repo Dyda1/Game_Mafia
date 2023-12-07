@@ -250,7 +250,7 @@
                     "name": "",
                     "id": "15b83b06-fe9f-4d16-8594-4f34a4315180",
                     "path": "<Mouse>/scroll/up",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "CameraMoveUp",
@@ -261,7 +261,18 @@
                     "name": "",
                     "id": "8cb213d6-c662-474d-9287-67de7b77ccf9",
                     "path": "<Mouse>/scroll/down",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "CameraMoveDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "97dde977-cecd-4101-a785-c9353d8889bd",
+                    "path": "<Keyboard>/minus",
+                    "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "CameraMoveDown",
@@ -276,6 +287,17 @@
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "SitForCrouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ebc58004-3c3f-4cb4-a952-d41684f2dd6e",
+                    "path": "<Keyboard>/equals",
+                    "interactions": "Press(behavior=2)",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "CameraMoveUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
