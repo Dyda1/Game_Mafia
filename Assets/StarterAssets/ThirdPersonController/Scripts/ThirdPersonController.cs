@@ -24,10 +24,10 @@ namespace StarterAssets
         public float cameraScrollSpeed = 0.5f;
 
         [Tooltip("Максимальное отдаление камеры")]
-        public static float maxCameraScroll = -10.0f;
+        public static float maxCameraScroll = 0.3f;
 
         [Tooltip("Максимальное приближение камеры")]
-        public static float minCameraScroll = -3.0f;
+        public static float minCameraScroll = -10.0f;
 
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
@@ -137,6 +137,7 @@ namespace StarterAssets
         private StarterAssetsInputs _input;
         private GameObject _mainCamera;
         private GameObject _normalCamera;
+        private GameObject _frontCamera;
 
         private const float _threshold = 0.01f;
 
@@ -163,6 +164,7 @@ namespace StarterAssets
                 _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
 
                 _normalCamera = GameObject.FindGameObjectWithTag("NormalCamera");
+                _frontCamera = GameObject.FindGameObjectWithTag("FrontCamera"); ;
             }
         }
 
@@ -256,18 +258,20 @@ namespace StarterAssets
         private void CameraPosition()
         {
             if(_cameraScrollTimeoutDelta <= 0.0f) { 
-                if (_input.CameraMoveUp && Math.Abs(_mainCameraPosZ) > Math.Abs(minCameraScroll))
+                if (_input.CameraMoveUp && _mainCameraPosZ < maxCameraScroll)
                 {
                     _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
                     _normalCamera.transform.localPosition = _normalCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
+                    _frontCamera.transform.localPosition = _frontCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
                     _mainCameraPosZ += cameraScrollSpeed;
                     _cameraScrollTimeoutDelta = CameraScrollTimeout;
                     //_input.CameraMoveUp = false;
                 }
-                if (_input.CameraMoveDown && Math.Abs(_mainCameraPosZ) < Math.Abs(maxCameraScroll))
+                if (_input.CameraMoveDown && _mainCameraPosZ > minCameraScroll)
                 {
                     _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
                     _normalCamera.transform.localPosition = _normalCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
+                    _frontCamera.transform.localPosition = _frontCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
                     _mainCameraPosZ -= cameraScrollSpeed;
                     _cameraScrollTimeoutDelta = CameraScrollTimeout;
                     //_input.CameraMoveDown = false;

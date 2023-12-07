@@ -27,8 +27,9 @@ public class CameraScript : MonoBehaviour
         if (Physics.Linecast(frontPosition.position, normalPosition.position, out hit, 3))
         {
             tempDistance = Vector3.Distance(mainCamera.transform.position, frontPosition.position) - Vector3.Distance(frontPosition.position, hit.point);
-            newPosition = mainCamera.transform.localPosition + new Vector3(0, 0, +tempDistance);
-            if (Math.Abs(newPosition.z) < Math.Abs(ThirdPersonController.maxCameraScroll) && newPosition.z < 0)
+            tempDistance += 0.6f;
+            newPosition = mainCamera.transform.localPosition + new Vector3(0, 0, tempDistance);
+            if (newPosition.z < ThirdPersonController.maxCameraScroll)
             {
                 mainCamera.transform.localPosition = newPosition;
                 cameraSpeedNow = cameraSpeed;
