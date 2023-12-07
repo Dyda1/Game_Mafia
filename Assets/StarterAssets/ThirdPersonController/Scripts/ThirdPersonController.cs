@@ -256,7 +256,7 @@ namespace StarterAssets
         private void CameraPosition()
         {
             if(_cameraScrollTimeoutDelta <= 0.0f) { 
-                if (_input.CameraMoveUp && Math.Abs(_mainCamera.transform.localPosition.z) > Math.Abs(minCameraScroll))
+                if (_input.CameraMoveUp && Math.Abs(_mainCameraPosZ) > Math.Abs(minCameraScroll))
                 {
                     _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
                     _normalCamera.transform.localPosition = _normalCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
@@ -264,7 +264,7 @@ namespace StarterAssets
                     _cameraScrollTimeoutDelta = CameraScrollTimeout;
                     //_input.CameraMoveUp = false;
                 }
-                if (_input.CameraMoveDown && Math.Abs(_mainCamera.transform.localPosition.z) < Math.Abs(maxCameraScroll))
+                if (_input.CameraMoveDown && Math.Abs(_mainCameraPosZ) < Math.Abs(maxCameraScroll))
                 {
                     _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
                     _normalCamera.transform.localPosition = _normalCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
