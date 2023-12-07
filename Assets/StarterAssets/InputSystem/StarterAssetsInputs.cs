@@ -38,7 +38,6 @@ namespace StarterAssets
 		public void OnCameraMoveUp(InputValue value)
 		{
 			CameraMoveUpInput(value.isPressed);
-            Debug.Log(value.isPressed);
         }
 
         public void OnCameraMoveDown(InputValue value)
