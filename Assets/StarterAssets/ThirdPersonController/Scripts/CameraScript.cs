@@ -28,7 +28,7 @@ public class CameraScript : MonoBehaviour
         {
             tempDistance = Vector3.Distance(mainCamera.transform.position, frontPosition.position) - Vector3.Distance(frontPosition.position, hit.point);
             newPosition = mainCamera.transform.localPosition + new Vector3(0, 0, +tempDistance);
-            if (Math.Abs(newPosition.z) < Math.Abs(ThirdPersonController.maxCameraScroll) && Math.Abs(newPosition.z) > 0)
+            if (Math.Abs(newPosition.z) < Math.Abs(ThirdPersonController.maxCameraScroll) && newPosition.z < 0)
             {
                 mainCamera.transform.localPosition = newPosition;
                 cameraSpeedNow = cameraSpeed;
@@ -38,9 +38,9 @@ public class CameraScript : MonoBehaviour
         {
             if (Math.Abs(mainCamera.transform.localPosition.z) < Math.Abs(ThirdPersonController._mainCameraPosZ) && !(Math.Abs(mainCamera.transform.localPosition.z) > Math.Abs(ThirdPersonController._mainCameraPosZ)))
             {
-                if (cameraSpeedNow - deltaSpeed > 0)
+                if (cameraSpeedNow - deltaSpeed * Time.deltaTime > cameraSpeedNow/3)
                 {
-                    cameraSpeedNow = cameraSpeedNow - deltaSpeed;
+                    cameraSpeedNow = cameraSpeedNow - deltaSpeed * Time.deltaTime;
                 }          
                 mainCamera.transform.localPosition = new Vector3(mainCamera.transform.localPosition.x, mainCamera.transform.localPosition.y, mainCamera.transform.localPosition.z - cameraSpeedNow * Time.deltaTime);
             }
