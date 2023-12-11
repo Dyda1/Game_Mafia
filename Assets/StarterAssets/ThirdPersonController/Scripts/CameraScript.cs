@@ -28,24 +28,26 @@ public class CameraScript : MonoBehaviour
         {
             tempDistance = Vector3.Distance(mainCamera.transform.position, frontPosition.position) - Vector3.Distance(frontPosition.position, hit.point);
             tempDistance += 0.6f;
+            //newPosition = mainCamera.transform.position - hit.point;
             newPosition = mainCamera.transform.localPosition + new Vector3(0, 0, tempDistance);
-            if (newPosition.z < ThirdPersonController.maxCameraScroll)
-            {
-                mainCamera.transform.localPosition = newPosition;
-                cameraSpeedNow = cameraSpeed;
-            }
+
+                mainCamera.transform.position = hit.point;
+            mainCamera.transform.localPosition += new Vector3(0, 0, 0.6f);
+
+            cameraSpeedNow = cameraSpeed;
+            
         }
         else
         {
-            if (Math.Abs(mainCamera.transform.localPosition.z) < Math.Abs(ThirdPersonController._mainCameraPosZ) && !(Math.Abs(mainCamera.transform.localPosition.z) > Math.Abs(ThirdPersonController._mainCameraPosZ)))
+            /*if (Math.Abs(mainCamera.transform.localPosition.z) < Math.Abs(ThirdPersonController._mainCameraPos.z) && !(Math.Abs(mainCamera.transform.localPosition.z) > Math.Abs(ThirdPersonController._mainCameraPosZ)))
             {
                 if (cameraSpeedNow - deltaSpeed * Time.deltaTime > cameraSpeedNow/3)
                 {
                     cameraSpeedNow = cameraSpeedNow - deltaSpeed * Time.deltaTime;
                 }          
                 mainCamera.transform.localPosition = new Vector3(mainCamera.transform.localPosition.x, mainCamera.transform.localPosition.y, mainCamera.transform.localPosition.z - cameraSpeedNow * Time.deltaTime);
-            }
-            //mainCamera.transform.localPosition = new Vector3(mainCamera.transform.localPosition.x, mainCamera.transform.localPosition.y, ThirdPersonController._mainCameraPosZ);
+            }*/
+            mainCamera.transform.localPosition = ThirdPersonController._mainCameraPos;
         }
     }
 }

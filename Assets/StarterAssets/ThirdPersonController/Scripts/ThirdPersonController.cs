@@ -102,7 +102,7 @@ namespace StarterAssets
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
-        public static float _mainCameraPosZ;
+        public static Vector3 _mainCameraPos;
 
         // player
         private float _speed;
@@ -170,7 +170,7 @@ namespace StarterAssets
 
         private void Start()
         {
-            _mainCameraPosZ = _mainCamera.transform.localPosition.z;
+            _mainCameraPos = _mainCamera.transform.localPosition;
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             
             _hasAnimator = TryGetComponent(out _animator);
@@ -258,21 +258,21 @@ namespace StarterAssets
         private void CameraPosition()
         {
             if(_cameraScrollTimeoutDelta <= 0.0f) { 
-                if (_input.CameraMoveUp && _mainCameraPosZ < maxCameraScroll)
+                if (_input.CameraMoveUp && _mainCameraPos.z < maxCameraScroll)
                 {
                     _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
                     _normalCamera.transform.localPosition = _normalCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
-                    _frontCamera.transform.localPosition = _frontCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
-                    _mainCameraPosZ += cameraScrollSpeed;
+                    //_frontCamera.transform.localPosition = _frontCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
+                    _mainCameraPos.z += cameraScrollSpeed;
                     _cameraScrollTimeoutDelta = CameraScrollTimeout;
                     //_input.CameraMoveUp = false;
                 }
-                if (_input.CameraMoveDown && _mainCameraPosZ > minCameraScroll)
+                if (_input.CameraMoveDown && _mainCameraPos.z > minCameraScroll)
                 {
                     _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
                     _normalCamera.transform.localPosition = _normalCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
-                    _frontCamera.transform.localPosition = _frontCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
-                    _mainCameraPosZ -= cameraScrollSpeed;
+                    //_frontCamera.transform.localPosition = _frontCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
+                    _mainCameraPos.z -= cameraScrollSpeed;
                     _cameraScrollTimeoutDelta = CameraScrollTimeout;
                     //_input.CameraMoveDown = false;
                 }
