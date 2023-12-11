@@ -24,7 +24,7 @@ namespace StarterAssets
         public float cameraScrollSpeed = 0.5f;
 
         [Tooltip("Максимальное отдаление камеры")]
-        public static float maxCameraScroll = 0.3f;
+        public static float maxCameraScroll = -4.0f;
 
         [Tooltip("Максимальное приближение камеры")]
         public static float minCameraScroll = -10.0f;
@@ -262,7 +262,6 @@ namespace StarterAssets
                 {
                     _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
                     _normalCamera.transform.localPosition = _normalCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
-                    //_frontCamera.transform.localPosition = _frontCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
                     _mainCameraPos.z += cameraScrollSpeed;
                     _cameraScrollTimeoutDelta = CameraScrollTimeout;
                     //_input.CameraMoveUp = false;
@@ -271,7 +270,6 @@ namespace StarterAssets
                 {
                     _mainCamera.transform.localPosition = _mainCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
                     _normalCamera.transform.localPosition = _normalCamera.transform.localPosition + new Vector3(0, 0, -cameraScrollSpeed);
-                    //_frontCamera.transform.localPosition = _frontCamera.transform.localPosition + new Vector3(0, 0, cameraScrollSpeed);
                     _mainCameraPos.z -= cameraScrollSpeed;
                     _cameraScrollTimeoutDelta = CameraScrollTimeout;
                     //_input.CameraMoveDown = false;
