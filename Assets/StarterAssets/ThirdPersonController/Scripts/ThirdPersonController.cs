@@ -61,6 +61,8 @@ namespace StarterAssets
         [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
         public float JumpTimeout = 0.50f;
 
+        public float JumpTimeoutAfterCrouch = 0.80f;
+
         [Tooltip("Time required to pass before being able to crouch again. Set to 0f to instantly crouch again")]
         public float CrouchTimeout = 0.4f;
 
@@ -443,9 +445,15 @@ namespace StarterAssets
                     if (_jumpTimeoutDelta >= 0.0f)
                     {
                         _jumpTimeoutDelta -= Time.deltaTime;
+                        _input.jump = false;
                     }
 
-                } 
+                }
+                else
+                {
+                    _input.jump = false;
+                    _jumpTimeoutDelta = JumpTimeoutAfterCrouch;
+                }
             }
             else
             {
